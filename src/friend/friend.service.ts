@@ -24,15 +24,10 @@ export class FriendService implements IFriendService {
     return this.friendRepository.save(friend);
   }
 
-  // Tüm arkadaşları listeler ve doğum gününe en yakın olana göre sıralar
-  async findAll(userId: number): Promise<Friend[]> {
-    const friends = await this.friendRepository.find({
-      where: { user: { id: userId } },
-    });
-
+  // Doğum günü yaklaşan arkadaşları yakından uzağa göre sıralar
+  private sortFriendsByUpcomingBirthday(friends: Friend[]): Friend[] {
     const today = new Date();
-    const todayMonth = today.getMonth();
-    const todayDate = today.getDate();
+    today.setHours(0, 0, 0, 0);
 
     return friends.sort((a, b) => {
       const aBirthday = new Date(today.getFullYear(), new Date(a.birthday).getMonth(), new Date(a.birthday).getDate());
@@ -41,12 +36,21 @@ export class FriendService implements IFriendService {
       let aDiff = (aBirthday.getTime() - today.getTime()) / (1000 * 3600 * 24);
       let bDiff = (bBirthday.getTime() - today.getTime()) / (1000 * 3600 * 24);
 
-      // Eğer doğum günü geçmişse +365 gün ekle (önümüzdeki yılın doğum günü gibi düşün)
       if (aDiff < -1) aDiff += 365;
       if (bDiff < -1) bDiff += 365;
 
       return aDiff - bDiff;
     });
+  }
+
+  
+  // Tüm arkadaşları listeler ve doğum gününe göre sıralar
+  async findAll(userId: number): Promise<Friend[]> {
+    const friends = await this.friendRepository.find({
+      where: { user: { id: userId } },
+    });
+
+    return this.sortFriendsByUpcomingBirthday(friends);
   }
 
   // Belirli bir arkadaşı günceller
@@ -113,6 +117,7 @@ export class FriendService implements IFriendService {
       query.andWhere('LOWER(friend.category) = LOWER(:category)', { category });
     }
 
-    return query.orderBy('friend.birthday', 'ASC').getMany();
+    const friends = await query.getMany();
+    return this.sortFriendsByUpcomingBirthday(friends);
   }
 }
