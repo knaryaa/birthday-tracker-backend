@@ -36,8 +36,8 @@ export class FriendService implements IFriendService {
       let aDiff = (aBirthday.getTime() - today.getTime()) / (1000 * 3600 * 24);
       let bDiff = (bBirthday.getTime() - today.getTime()) / (1000 * 3600 * 24);
 
-      if (aDiff < -1) aDiff += 365;
-      if (bDiff < -1) bDiff += 365;
+      if (aDiff < 0) aDiff += 365;
+      if (bDiff < 0) bDiff += 365;
 
       return aDiff - bDiff;
     });
