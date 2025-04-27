@@ -11,8 +11,8 @@ async function bootstrap() {
 
     // Frontend (React) uygulamasından istek kabul etmek için CORS ayarı
     app.enableCors({
-        origin: 'http://localhost:5173', // React frontend'in çalıştığı adres
-        credentials: true,               // Cookie veya header ile bilgi taşıyabilmek için
+        origin: ['https://birthday-tracker-frontend.vercel.app/'], // React frontend'in çalıştığı adres
+        credentials: true, // Cookie veya header ile bilgi taşıyabilmek için
     });
     // Global Exception Filter ekleniyor (standart hata yönetimi)
     app.useGlobalFilters(new HttpExceptionFilter());
