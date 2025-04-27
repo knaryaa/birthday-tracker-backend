@@ -56,7 +56,7 @@ async function bootstrap() {
     // .env'den port bilgisi alınır, yoksa 3000 kullanılır
     const configService = app.get(ConfigService);
     const port = configService.get<number>('PORT') || 3000;
-    await app.listen(port); // Sunucu belirtilen port üzerinden başlatılır
+    await app.listen(port, '0.0.0.0'); // Sunucu belirtilen port üzerinden başlatılır
     
 }
 bootstrap();
