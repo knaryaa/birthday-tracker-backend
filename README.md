@@ -32,7 +32,7 @@
 ### Backend (Server)
 
 ```bash
-cd birthday-tracker
+cd birthday-tracker-backend
 npm install
 npm run start:dev
 ```
@@ -97,7 +97,9 @@ Swagger API Dokümantasyonu:Swagger UI kullanılarak tüm API endpointleri test 
 ---
 ## 📦 Deployment
 
-(Deployment adımları proje yayınlandıktan sonra güncellenecek)
+Katman	    Platform	Link
+Backend	    Render	    https://birthday-tracker-backend.onrender.com
+Frontend	Netlify	    https://birthday-tracker-frontend.netlify.app
 
 ---
 
