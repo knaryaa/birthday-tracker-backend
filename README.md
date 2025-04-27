@@ -1,19 +1,21 @@
-# Birthday Tracker
+# 🎂 Birthday Tracker
 
-> Kullanıcıların arkadaşlarının doğum günlerini takip edebildiği fullstack bir web uygulamasıdır.
+> Kullanıcıların arkadaşlarının doğum günlerini kolayca takip edebildiği fullstack bir web uygulaması.
 
 ---
 
 ## 🚀 Proje Özellikleri
 
 - Kullanıcı kayıt ve giriş işlemleri (JWT Authentication).
-- Arkadaş ekleme, güncelleme ve silme.
-- Arkadaş doğum günü takibi (yaklaşan doğum günleri vurgulama).
+- Arkadaş ekleme, listeleme, güncelleme ve silme.
+- Yaklaşan doğum günlerinin vurgulanması.
 - İsim veya kategoriye göre arkadaş arama.
-- Modern ve responsive frontend arayüz (React).
+- Modern ve responsive frontend arayüz (React + Vite).
 - Backend NestJS ile geliştirilmiş RESTful API.
-- Swagger ile API dokümantasyonu.
-- SQLite kullanılarak veri yönetimi.
+- SQLite kullanılarak hızlı ve hafif veri yönetimi.
+- Tam entegre E2E (End-to-End) testler.
+- Loglama, Validation ve Exception Handling özellikleri.
+- Production ortamı için hazır yapılandırma (CORS, Throttle Guard, Interceptor).
 
 ---
 
@@ -21,9 +23,9 @@
 
 | Katman | Teknolojiler |
 |:--|:--|
-| Backend | NestJS, TypeORM, SQLite, JWT |
+| Backend | NestJS, TypeORM, SQLite, JWT, Swagger |
 | Frontend | React (Vite + TypeScript), Fetch API, React Router |
-| Deployment | (Deployment adımları deploy sonrası eklenecek) |
+| Deployment | Render.com (Backend) + Netlify (Frontend) |
 
 ---
 
@@ -32,13 +34,13 @@
 ### Backend (Server)
 
 ```bash
-cd birthday-tracker-backend
+cd birthday-tracker
 npm install
 npm run start:dev
 ```
 
-> Sunucu `localhost:3000` üzerinde çalışır.  
-> Swagger API dokümantasyonu: `http://localhost:3000/api`
+> Sunucu: `http://localhost:3000`  
+> API Dokümantasyonu: `http://localhost:3000/api`
 
 ### Frontend (Client)
 
@@ -48,64 +50,94 @@ npm install
 npm run dev
 ```
 
-> Frontend `localhost:5173` portunda çalışır.
+> Frontend: `http://localhost:5173`
 
 ---
 
 ## 🔐 API Endpointleri
 
-| Endpoint | Açıklama |
-|:--|:--|
-| POST /users/register | Kullanıcı kaydı |
-| POST /users/login | Kullanıcı girişi |
-| GET /friends | Tüm arkadaşları getirir |
-| POST /friends | Yeni arkadaş ekler |
-| PUT /friends/:id | Arkadaşı günceller |
-| DELETE /friends/:id | Arkadaşı siler |
-| GET /friends/upcoming | Yaklaşan doğum günlerini getirir |
-| GET /friends/search | İsim/kategoriye göre arama yapar |
+| Yöntem | URL | Açıklama |
+|:--|:--|:--|
+| POST | `/users/register` | Kullanıcı kaydı |
+| POST | `/users/login` | Kullanıcı girişi |
+| GET | `/friends` | Tüm arkadaşları getirir |
+| POST | `/friends` | Yeni arkadaş ekler |
+| PUT | `/friends/:id` | Arkadaşı günceller |
+| DELETE | `/friends/:id` | Arkadaşı siler |
+| GET | `/friends/upcoming` | Yaklaşan doğum günlerini listeler |
+| GET | `/friends/search?name=...&category=...` | İsim ve kategoriye göre arama yapar |
 
 ---
 
-## 💻 Kullanım Senaryosu
+## ✨ Ekstra Özellikler
 
-1. Kullanıcı `/register` sayfasından kayıt olur.
-2. `/login` sayfasından giriş yapar.
+- **Global Validation:** DTO seviyesinde validation, hatalı isteklerde detaylı hata mesajları.
+- **Global Exception Filter:** Merkezî hata yönetimi ve özel hata yanıtları.
+- **API Response Helper:** Başarılı dönüşler için standart JSON formatı.
+- **Global Logging:** Her istek ve hata detaylı olarak loglanır.
+- **JWT Authorization:** Bearer Token kullanımı ve Swagger entegrasyonu.
+- **Throttle Guard:** Brute force saldırılarına karşı rate limiting koruması.
+- **Swagger API Dokümantasyonu:** Swagger UI ile tüm endpointleri test edebilme.
+- **SPA Routing (Netlify history fallback):** Sayfa yenilendiğinde 404 hatası engellenmiştir.
+
+---
+
+## 📈 Kullanım Akışı
+
+1. `/register` sayfasından kullanıcı kaydı yapılır.
+2. `/login` ile giriş yapılır.
 3. Dashboard ekranında:
-    - Arkadaş ekler,
-    - Arkadaşları listeler,
-    - Yaklaşan doğum günlerini vurgulu görür,
-    - Arkadaşlarını güncelleyebilir veya silebilir.
-4. Arkadaşları isim veya kategoriye göre arayabilir.
+   - Arkadaşlar eklenir, listelenir, güncellenir, silinir.
+   - Yaklaşan doğum günleri ayrı bir sekmede vurgulanır.
+   - İsim veya kategoriye göre arama yapılır.
+4. Çıkış butonu ile oturum sonlandırılır.
 
 ---
 
-## ✨Ekstra Özellikler
+## 🧪 E2E (End-to-End) Testler
 
-Global Validation:Tüm API endpointlerinde DTO yapısı kullanılarak input validation yapılmıştır. Eksik veya hatalı veri için 400 Bad Request hatası verilir.
+Testler **Jest + Supertest** kullanılarak yazıldı.
 
-Global Exception Filter:Bütün hatalar merkezi bir exception filter ile yakalanır ve standart hata formatında kullanıcıya dönülür.
+> Test Komutu:
 
-API Response Helper:Tüm başarılı cevaplar tutarlı JSON yapısında standartlaştırılmıştır.
+```bash
+npm run test:e2e
+```
 
-Global Logging:Gelen tüm istekler ve oluşan hatalar backend tarafında loglanır.
+**Test Edilenler:**
+- Kullanıcı kaydı.
+- Kullanıcı girişi.
+- Arkadaş ekleme.
+- Arkadaş listeleme.
+- Arkadaş güncelleme.
+- Arkadaş silme.
 
-JWT Authorization:Tüm korumalı endpointlere erişim JWT token ile sağlanır. Swagger UI Bearer Auth desteği vardır.
+**Test Sonucu:**
 
-Swagger API Dokümantasyonu:Swagger UI kullanılarak tüm API endpointleri test edilebilir.
+```bash
+Test Suites: 1 passed, 1 total
+Tests:       4 passed, 4 total
+```
+
+✅ Başarıyla tüm işlemler testten geçmektedir.
 
 ---
+
 ## 📦 Deployment
 
-Katman	    Platform	Link
-Backend	    Render	    https://birthday-tracker-backend.onrender.com
-Frontend	Netlify	    https://birthday-tracker-frontend.netlify.app
+| Katman | URL |
+|:--|:--|
+| Backend | [https://birthday-tracker-backend.onrender.com](https://birthday-tracker-backend.onrender.com) |
+| Frontend | [https://birthday-tracker-frontend.netlify.app](https://birthday-tracker-frontend.netlify.app) |
+
+> Frontend ile Backend arasındaki iletişim CORS ayarları ile güvenli şekilde sağlanmaktadır.
 
 ---
 
-## 📈 Swagger API Kullanımı
+## 📄 Swagger API Kullanımı
 
-- API Dökümantasyonu: `http://localhost:3000/api`
-- Bearer Token ile yetkilendirme gerektirir.
+- Swagger UI adresi: `https://birthday-tracker-backend.onrender.com/api`
+- Tüm endpointler test edilebilir.
+- Bearer Auth ile JWT token girilerek yetkili işlemler yapılabilir.
 
 ---
