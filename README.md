@@ -128,7 +128,7 @@ Tests:       4 passed, 4 total
 | Katman | URL |
 |:--|:--|
 | Backend | [https://birthday-tracker-backend.onrender.com](https://birthday-tracker-backend.onrender.com) |
-| Frontend | [https://birthday-tracker-frontend.netlify.app](https://birthday-tracker-frontend.netlify.app) |
+| Frontend | [https://birthday-tracker-frontend.vercel.app](https://birthday-tracker-frontend.vercel.app) |
 
 > Frontend ile Backend arasındaki iletişim CORS ayarları ile güvenli şekilde sağlanmaktadır.
 
